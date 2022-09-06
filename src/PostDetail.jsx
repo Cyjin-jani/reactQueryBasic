@@ -1,4 +1,4 @@
-import { useQuery } from 'react-query'
+import { useQuery, useMutation } from 'react-query'
 
 async function fetchComments(postId) {
   const response = await fetch(
@@ -49,6 +49,13 @@ export function PostDetail({ post }) {
     ['postDetail', post.id],
     () => fetchComments(post.id)
   )
+  // useMutation은 mutate 함수를 반환함 (구조분해를 하지 않은 이유는 위의 useQuery와 겹치지 않도록 하기 위함)
+  const deleteMutation = useMutation(postId => deletePost(postId))
+  // 위와 같은 방식이 아닌, 아래와 같이 바로 넘겨주는 것도 가능하나,
+  // useMutation에서는 바로 인자값을 받을 수 있는 것을 보여주기 위해 위와 같이 사용
+  // const deleteMutation = useMutation(() => deletePost(post.id));
+
+  const updatePostMutation = useMutation(postId => updatePost(postId))
 
   if (isError) {
     return (
@@ -66,7 +73,28 @@ export function PostDetail({ post }) {
   return (
     <>
       <h3 style={{ color: 'blue' }}>{post.title}</h3>
-      <button>Delete</button> <button>Update title</button>
+      <button onClick={() => deleteMutation.mutate(post.id)}>Delete</button>
+      {deleteMutation.isError && (
+        <p style={{ color: 'red' }}>Error deleting the post</p>
+      )}
+      {deleteMutation.isLoading && (
+        <p style={{ color: 'blue' }}>now loading...for delete</p>
+      )}
+      {deleteMutation.isSuccess && (
+        <p style={{ color: 'green' }}>Deleted! (is a fake) </p>
+      )}
+      <button onClick={() => updatePostMutation.mutate(post.id)}>
+        Update title
+      </button>
+      {updatePostMutation.isLoading && (
+        <p style={{ color: 'blue' }}> now loading for update</p>
+      )}
+      {updatePostMutation.isError && (
+        <p style={{ color: 'red' }}> failed for updating the post</p>
+      )}
+      {updatePostMutation.isSuccess && (
+        <p style={{ color: 'green' }}>now updated the title</p>
+      )}
       <p>{post.body}</p>
       <h4>Comments</h4>
       {data.map(comment => (
