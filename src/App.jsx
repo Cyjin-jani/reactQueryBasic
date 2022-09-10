@@ -15,8 +15,8 @@ function App() {
         {/* <h1>Blog Posts</h1>
         <Posts /> */}
         <h1>Infinite SWAPI</h1>
-        <InfinitePeople />
-        {/* <InfiniteSpecies /> */}
+        {/* <InfinitePeople /> */}
+        <InfiniteSpecies />
         <ReactQueryDevtools />
       </div>
     </QueryClientProvider>

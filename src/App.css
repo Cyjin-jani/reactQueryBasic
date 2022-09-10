@@ -15,3 +15,11 @@ div.pages {
   justify-content: space-between;
   width: 100%;
 }
+
+.loading {
+  position: fixed;
+  top: 5px;
+  right: 5px;
+  background-color: blue;
+  color: #fff;
+}
